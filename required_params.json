@@ -1,0 +1,31 @@
+//#Put in the google sheet the params I want so that at
+//#each location the params are already in the "get_data()" method
+//# AND they are easier to change, no need to go into the code
+//#AND they are custom for each location
+//use list comprehension to only keep keys that have a value and do
+// param = [{key: value} for key, value in json.keys() if value ]
+//or smth like this
+
+{
+  "fly_from": "", //airport: or city: not necessary
+  "fly_to": "",
+  "date_from": "",
+  "date_to": "",
+  "nights_in_dst_from":"",
+  "nights_in_dst_to": "",
+  "max_fly_duration": 30,
+  "flight_type": "",
+  "ret_from_diff_city": false,
+  "ret_to_diff_city": false,
+  "selected_cabins": "M",
+  "adult_hold_bag": 1,
+  "price_to": 2000,
+  "max_stopovers": 2,
+  "max_sector_stopovers": 1,
+  "limit": 10
+}
+
+//Header with API key
+//Selected cabin "M" is economy
+//# ! max_stopovers = au nombre TOTAL de stopover, pour l'aller ET le retour
+//# sinon utiliser sector_stopovers pour specifier le nombre de stopover pour aller et retour

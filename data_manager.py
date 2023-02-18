@@ -1,32 +1,23 @@
 import os
 import requests
 from flight_search import FlightSearch
+import inflection
 from pprint import pprint
+# To prevent more Sheety API requests
+from hardcoded_data import hardcoded_data
 
 SHEETY_BEARER_TOKEN = os.environ.get("SHEETY_BEARER_TOKEN")
 SHEETY_ENDPOINT = os.environ.get("SHEETY_PRICES_ENDPOINT")
 SHEETY_EDIT_ROW_ENDPOINT = os.environ.get("SHEETY_EDIT_ROW_ENDPOINT")
 
-# To prevent more Sheety API requests
-temp_data = [{'city': 'Kyoto', 'flyFrom': 'KIX', 'id': 2},
- {'city': 'Fukuoka', 'flyFrom': 'FUK', 'id': 3},
- {'city': 'Tokyo', 'flyFrom': 'TYO', 'id': 4},
- {'city': 'Lisbon', 'flyFrom': 'LIS', 'id': 5},
- {'city': 'Istanbul', 'flyFrom': 'IST', 'id': 6},
- {'city': 'New York', 'flyFrom': 'NYC', 'id': 7},
- {'city': 'Berlin', 'flyFrom': 'BER', 'id': 8},
- {'city': 'Taipei', 'flyFrom': 'TPE', 'id': 9},
- {'city': 'Tainan', 'flyFrom': 'TNN', 'id': 10}]
-
-
 class DataManager:
     # This class is responsible for talking to the Google Sheet.
     def __init__(self):
         self.header = {"Authorization": f"Bearer {SHEETY_BEARER_TOKEN}"}
-        # Change below value to empty dict {} or list [] to do sheety requests
-        # Or save requests with self.sheet_data = temp_data
+        # Change below value to empty list [] to do sheety requests
+        # Or save requests with self.sheet_data = hardcoded_data
         # Should directly call get_data() but need to save API calls
-        self.sheet_data = {}
+        self.sheet_data = hardcoded_data
 
     def get_data(self):
         #prevent extra sheety requests
@@ -39,9 +30,10 @@ class DataManager:
             print("There was an API issue when getting the rows of the Google Sheet")
             print("Error msg : ", err_msg)
         else:
-            self.sheet_data = row_data.json()['prices']
-            # self.check_iata_codes()
-            # pprint(self.sheet_data)
+            camel_case_data = row_data.json()['prices']
+            for n in range(0, len(camel_case_data)):
+                self.sheet_data.append({inflection.underscore(key): value for key, value in camel_case_data[n].items()})
+            self.check_iata_codes() #TO UNCOMMENT
             return self.sheet_data
 
     def check_iata_codes(self):

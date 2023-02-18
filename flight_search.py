@@ -34,5 +34,7 @@ class FlightSearch:
 
     def find_cheap_flights(self):
         #apikey
+        #do not include empty values or "city" in params
+        #create function for parameter formatting in flight_data
         pass
 

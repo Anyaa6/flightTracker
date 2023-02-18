@@ -1,3 +1,4 @@
+import json
 import os
 import requests
 from flight_search import FlightSearch
@@ -34,17 +35,20 @@ class DataManager:
             for n in range(0, len(camel_case_data)):
                 self.sheet_data.append({inflection.underscore(key): value for key, value in camel_case_data[n].items()})
             self.check_iata_codes() #TO UNCOMMENT
+            with open("./hardcoded_data.py", mode="w") as file:
+                pretty_data = json.dumps(self.sheet_data, indent=4).replace("false", "False")
+                file.write(f"hardcoded_data = {pretty_data}")
             return self.sheet_data
 
     def check_iata_codes(self):
         for row in self.sheet_data:
-            if "flyFrom" not in row:
-                row["flyFrom"] = FlightSearch().find_iata_code(row.get("city"))
+            if "fly_to" not in row:
+                row["fly_to"] = FlightSearch().find_iata_code(row.get("city"))
 
                 # No need to put again other infos in body (ex: Lowest price)
                 body = {
                     "price": {
-                        "flyFrom": row.get("flyFrom")
+                        "fly_to": row.get("fly_to")
                     }
                 }
                 # do a put request to update row on google sheet

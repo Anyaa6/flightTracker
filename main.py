@@ -9,7 +9,7 @@ KIWI_ENDPOINT = "https://api.tequila.kiwi.com/v2/search"
 
 #!!! bien verifier que la data a l'INTERIEUR du tableau n'a pas besoin non plus de passer en snake_case
 # Prevent extra API requests to Sheety
-data_manager = DataManager().get_data()
-pprint(data_manager)
-
+data = DataManager().get_data()
+# pprint(data)
+FlightSearch().find_cheap_flights(data)
 # print(FlightSearch().today)
